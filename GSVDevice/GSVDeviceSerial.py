@@ -15,10 +15,10 @@ class GSVDeviceSerial(gsv8):
         super().__init__(port, baudrate)
 
     def start_constant_transmission(self):
-        self.StartTransmission()
+        return self.StartTransmission()
 
     def stop_constant_transmission(self):
-        self.StopTransmission()
+        return self.StopTransmission()
 
     def read_data(self):
         """
@@ -36,4 +36,4 @@ class GSVDeviceSerial(gsv8):
         :param rate: The transmission rate in Hz
         :return: None
         """
-        self.writeDataRate(rate)
+        return self.writeDataRate(rate)
