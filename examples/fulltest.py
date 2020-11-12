@@ -51,8 +51,7 @@ __author__ = 'Robert bremsat & Dennis Rump'
 #
 ###############################################################################
 
-from gsv8 import gsv8
-from time import sleep
+from GSVDevice.gsv8 import gsv8
 
 if __name__ == '__main__':
     # construct device

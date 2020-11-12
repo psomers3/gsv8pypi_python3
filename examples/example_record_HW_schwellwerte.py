@@ -52,9 +52,7 @@ __author__ = 'Dennis Rump'
 #
 ###############################################################################
 
-from gsv8 import gsv8
-import signal
-import sys
+from GSVDevice.gsv8 import gsv8
 
 if __name__ == '__main__':
     running = True

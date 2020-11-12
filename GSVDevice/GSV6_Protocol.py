@@ -48,8 +48,7 @@ __author__ = 'Dennis Rump'
 
 import logging
 from queue import Full
-import GSV6_BasicFrameType
-import GSV6_ErrorCodes
+from GSVDevice import GSV6_BasicFrameType, GSV6_ErrorCodes
 import threading
 
 

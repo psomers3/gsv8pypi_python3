@@ -4,7 +4,6 @@ Datum 01.2016
 @author: ME-Meßsysteme GmbH, Robert Bremsat, Dennis Rump
 @version 1.2
 """
-from time import sleep
 
 __author__ = 'Robert bremsat & Dennis Rump'
 ###############################################################################
@@ -53,8 +52,7 @@ __author__ = 'Robert bremsat & Dennis Rump'
 #
 ###############################################################################
 
-from gsv8 import gsv8
-import sys
+from GSVDevice.gsv8 import gsv8
 
 if __name__ == '__main__':
     # construct device

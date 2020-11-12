@@ -51,7 +51,7 @@ __author__ = 'Dennis Rump'
 #
 ###############################################################################
 
-from gsv8 import gsv8
+from GSVDevice.gsv8 import gsv8
 
 if __name__ == '__main__':
     # construct device

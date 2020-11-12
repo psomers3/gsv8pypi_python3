@@ -1,11 +1,10 @@
 # -*- coding: utf-8 -*-
 """
 Datum 01.2016
-@author: ME-Meßsysteme GmbH, Dennis Rump
+@author: ME-Meßsysteme GmbH, Robert Bremsat, Dennis Rump
 @version 1.2
 """
-
-__author__ = 'Dennis Rump'
+__author__ = 'Robert bremsat & Dennis Rump'
 ###############################################################################
 #
 # The MIT License (MIT)
@@ -52,61 +51,67 @@ __author__ = 'Dennis Rump'
 #
 ###############################################################################
 
-from gsv8 import gsv8
-import signal
-import sys
+from GSVDevice.gsv8 import gsv8
+from datetime import datetime
 
 if __name__ == '__main__':
     # construct device
     # Unix
     dev1 = gsv8("/dev/ttyACM0",115200)
     # Windows
-    # dev1 = gsv8(21, 115200)
+    # dev1 = gsv8("COM26", 115200)
+    # dev1 = gsv8("COM26", 115200)
 
-    schwellwert1 = 10.0
-    hysterese_high = 7.0
-    hysterese_low = 5.0
-
+    print "test: " + ' '.join(format(x, '02x') for x in bytearray(dev1.isPinHigh(1)))
 
     # einen eine Messung anstoßen
     measurement = dev1.ReadValue()
-    print('Kanal 1: {}'.format(measurement.getChannel1()))
-    print(measurement.toString())
+    print 'Kanal 1: {}'.format(measurement.getChannel1())
+    print measurement.toString()
 
     measurement2 = dev1.ReadValue()
-    print('Kanal 1: {}'.format(measurement2.getChannel1()))
-    print(measurement2.toString())
+    print 'Kanal 1: {}'.format(measurement2.getChannel1())
+    print measurement2.toString()
 
-    print('is Pin 1 high?: {}'.format(dev1.isPinHigh(1)))
-    print('is Pin 2 low?: {}'.format(dev1.isPinLow(2)))
-
-    # ist die Verrechnungsmatrix aktiv?
-    if (dev1.isSixAxisMatrixActive()):
-        print("matrix active")
-    else:
-        print("matrix inactive")
-
+    #dev1.writeDataRate(100.0)
+    '''
+    dev1.setDIOdirection(9,1);
+    dev1.setDIOdirection(10,1);
+    dev1.setDIOdirection(1,0);
+    dev1.setDIOdirection(2,0);
+    dev1.setDIOinitialLevel(1,1);
+    dev1.setDIOinitialLevel(2,0);
+    dev1.setDIOinitialLevel(10,0);
     dev1.StartTransmission()
+    '''
 
+    # dev1.startCSVrecording(10.0, './messungen')
+
+    actTime = lastTime = datetime.now()
+    diffTime = actTime - lastTime
     try:
-        while (True):
-            # Eine Messung anfordern und Messwert von Kanal1 in einer Variablen speichern
-            messwert = dev1.ReadValue().getChannel7()
-            # print messwert
-            '''
-            # Aktion auf Schwellwert - Enifache Variante
-            if(messwert >= schwellwert1):
-                dev1.startCSVrecordingWithoutStartTransmisson('./messungen')
-            else:
-                 dev1.stopCSVrecordingWithoutStopTransmission()
-            '''
-
-            # Aktion auf Schwellwert - mit Hysterese
-            if(messwert >= hysterese_high):
-                dev1.startCSVrecordingWithoutStartTransmisson('./messungen', 'dev1_')
-            elif(messwert <= hysterese_low):
-                dev1.stopCSVrecordingWithoutStopTransmission()
+        while(True):
+            actTime = datetime.now()
+            diffTime = actTime - lastTime
+            if(diffTime.seconds >= 0 and diffTime.microseconds>=10000):
+                # print datetime.now().strftime('%Y-%m-%d %H:%M:%S.%f')[:-3]
+                # print diffTime
+                measurement2 = dev1.ReadValue()
+                # print 'Kanal 1: {}'.format(measurement2.getChannel1())
+                if(dev1.isPinHigh(9)):
+                    # print "JA"
+                    dev1.setPinToHigh(1);
+                    dev1.setPinToLow(2);
+                else:
+                    dev1.setPinToHigh(2);
+                    dev1.setPinToLow(1);
+                    # print "NEIN"
+                # print measurement2.toString()
+                actTime = lastTime = datetime.now()
+            elif (diffTime.seconds > 0):
+                actTime = lastTime = datetime.now()
     except KeyboardInterrupt:
+        # wennn Programm durch Tastatur beendet wird, Messung stoppen
         dev1.stopCSVrecording()
     finally:
         # destruct device
