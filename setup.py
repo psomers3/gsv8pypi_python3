@@ -15,5 +15,5 @@ setup(
         "Operating System :: POSIX :: Linux :: Windows :: OSX",
     ],
     python_requires='>=3',
-    install_requires=['serial']
+    install_requires=['pyserial']
 )
